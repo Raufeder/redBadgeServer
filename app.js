@@ -13,7 +13,9 @@ app.use(Express.json());
 
 app.use("/user", controllers.User);
 
-// app.use("/route", middlewares.ValidateJWT, controllers.Route); 
+app.use("/route", middlewares.ValidateJWT, controllers.Route); 
+
+app.use("/admin", middlewares.ValidateJWT, middlewares.Admin, controllers.Admin)
 
 app.get("/", (req, res) => {
     res.json({

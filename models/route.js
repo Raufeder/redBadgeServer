@@ -1,4 +1,4 @@
-/* const { DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const db = require('../db');
 
 const Route = db.define('route', {
@@ -36,4 +36,4 @@ const Route = db.define('route', {
     }
 });
 
-module.exports = Route; */
+module.exports = Route;
