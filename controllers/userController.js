@@ -1,23 +1,29 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { Router } = require('express');
-const { User } = require('../models');
+const User = require('../models/user');
+const Router = require('express');
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 
 const userController = Router();
 
-userController.post('/register', function(req, res){
+userController.post('/test', function(req, res){
+    res.send("Test went through!")
+});
+
+userController.post('/register', function(req, res) {
     let username = req.body.user.username;
     let email = req.body.user.email;
     let password = req.body.user.password;
-
+    let userType = req.body.user.userType;
+    // res.send('we got here')
     User.create({
         username: username,
         email: email,
-        passwordhash: bcrypt.hashSync(password, 12)
+        password: bcrypt.hashSync(password, 12),
+        userType: userType
     }).then(
         function createSuccess(user) {
-            var token = jwt.sign({id: user.id}, process.env.JWT_SECRET,
+            let token = jwt.sign({id: user.id}, process.env.JWT_SECRET,
                 {expiresIn: 60*60*24});
 
                 res.json({
@@ -37,8 +43,8 @@ userController.post('/register', function(req, res){
                 });
             }
         }
-    ); 
-});
+    );
+});  
 
 userController.post('/login', function(req, res) {
     User.findOne( { where: { username: req.body.user.username } } ).then(
@@ -47,7 +53,7 @@ userController.post('/login', function(req, res) {
             if (user) {
                 bcrypt.compare(req.body.user.password, user.email, user.passwordhash, function (err, matches) {
                     if (matches) {
-                        var token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 60*60*24});
+                        let token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 60*60*24});
                         res.json({
                             user: user,
                             message: "Successful Login!",

@@ -1,8 +1,12 @@
-const bcrypt = require('bcryptjs');
-const { Router } = require('express');
-const { User } = require("../models");
+// const bcrypt = require('bcryptjs');
+// const { Router } = require('express');
+// const { Route } = require("../models/route");
+// cont { User } = require("../models/user")
 
-//TODO Admin Routes (Create Routes, Delete Routes, Get Route List, Update Password )
-const adminController = Router();
 
-module.exports = adminController;
+// const adminController = Router();
+
+// //TODO Admin Routes (Create Routes, Create User, Delete User, Delete Routes, Get Route List, Update Password )
+// adminController.put
+
+// module.exports = adminController;

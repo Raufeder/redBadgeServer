@@ -4,6 +4,8 @@ const db = require("./db");
 
 const app = Express();
 
+const user = require("./controllers/userController");
+
 const middlewares = require("./middleware");
 
 const controllers = require("./controllers");
@@ -11,11 +13,11 @@ const controllers = require("./controllers");
 app.use(middlewares.CORS);
 app.use(Express.json());
 
-app.use("/user", controllers.User);
+app.use("/user", user);
 
-app.use("/route", middlewares.ValidateJWT, controllers.Route); 
+// app.use("/route", middlewares.ValidateJWT, controllers.Route); 
 
-app.use("/admin", middlewares.ValidateJWT, middlewares.Admin, controllers.Admin)
+// app.use("/admin", middlewares.ValidateJWT, middlewares.Admin, controllers.Admin)
 
 app.get("/", (req, res) => {
     res.json({
