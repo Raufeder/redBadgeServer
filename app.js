@@ -17,7 +17,7 @@ app.use("/user", user);
 
 // app.use("/route", middlewares.ValidateJWT, controllers.Route); 
 
-// app.use("/admin", middlewares.ValidateJWT, middlewares.Admin, controllers.Admin)
+app.use("/admin", middlewares.ValidateJWT, middlewares.Admin, controllers.Admin)
 
 app.get("/", (req, res) => {
     res.json({

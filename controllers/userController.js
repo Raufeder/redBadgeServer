@@ -15,7 +15,7 @@ userController.post('/register', function(req, res) {
     let email = req.body.user.email;
     let password = req.body.user.password;
     let userType = req.body.user.userType;
-    // res.send('we got here')
+    
     User.create({
         username: username,
         email: email,
@@ -60,7 +60,7 @@ userController.post('/login', function(req, res) {
                             sessionToken: token
                         });
                     }else {
-                        res.status(502).send({ error: "you failed haha!"});
+                        res.status(502).send({ error: "Login failed"});
                     }
                 });
             } else {
@@ -68,7 +68,7 @@ userController.post('/login', function(req, res) {
             }
         },
     function (err) {
-        res.status(501).send({ error: "you failed, haha!!" });
+        res.status(501).send({ error: "Login failed" });
     }
   );
 });
