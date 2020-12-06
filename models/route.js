@@ -7,15 +7,15 @@ const Route = db.define('route', {
         allowNull: false,
     },
     routeName: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: true
     },
     routeType: {
-       type: DataTypes.STRING(50),
+       type: DataTypes.STRING,
        allowNull: false
     },
     grade: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.STRING,
         allowNull: false
     },
     keywords: {

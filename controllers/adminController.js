@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const { Router } = require('express');
 const { Route } = require("../models/route");
 const { User } = require("../models/user");
-const { response } = require('./userController');
 
 
 const adminController = Router();
