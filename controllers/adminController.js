@@ -3,10 +3,9 @@ const { Router } = require('express');
 const { Route } = require("../models/route");
 const { User } = require("../models/user");
 
-
 const adminController = Router();
 
-//TODO Admin Routes (Edit Routes, Delete Routes, Get Route List, Update Password (Maybe) )
+//TODO Admin Routes (Update Password (Maybe))
 adminController.put('/add/:id', async (req,res) => {
     try {
         let userId = req.params.id;
@@ -104,5 +103,84 @@ adminController.post('/add/route', function(req, res) {
         }
     )
 });
+
+adminController.delete('/delete/route/:id', async (req,res) => {
+    try{
+       let routeId = req.params.id
+       let deleteRoute = await Route.findOne({
+           where: {
+               id: routeId
+           }
+       });
+
+       if (deleteRoute) {
+           deleteRoute.destroy();
+           res.status(200).json({
+               message: 'route deleted'
+           });
+       } else {
+           res.status(401).json({
+               message: "Couldn't find route"
+           })
+       }
+    } catch (e) {
+        res.status(500).json({
+            message: 'failed to delete route'
+        })
+    }
+});
+
+adminController.get('/routelist', async (req, res) => {
+    try {
+        const listofRoutes = await Route.findAll();
+        res.status(200).json({
+            routes: listofRoutes
+        });
+    } catch (e) {
+        res.status(500).json({
+            message: "Couldn't get route list"
+        })
+    }
+});
+
+adminController.put('/edit/route/:id', function(req, res){
+    let route_id = req.user.id;
+    let routeName = req.body.route.routeName;
+    let routeType = req.body.route.routeType;
+    let grade = req.body.route.grade;
+    let keywords = req.body.route.keywords;
+    let description = req.body.route.description;
+    let completed = req.body.route.completed;
+
+    Route.update({
+        route_id: route_id,
+        routeName: routeName,
+        routeType: routeType,
+        grade: grade,
+        keywords: keywords,
+        description: description,
+        completed: completed
+    },
+    {where: {id: request.params.id}}
+    ).then(
+        function updateSuccess(updatedChar) {
+            response.json({
+                route_id: route_id,
+                routeName: routeName,
+                routeType: routeType,
+                grade: grade,
+                keywords: keywords,
+                description: description,
+                completed: completed
+            });
+        },
+        function createError(err) {             
+            response.send(500, err.message);
+            message: "Failed to update route"
+        }
+    )
+});
+
+
 
 module.exports = adminController;

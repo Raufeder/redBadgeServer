@@ -5,19 +5,19 @@ const db = require("./db");
 const app = Express();
 
 const user = require("./controllers/userController");
+const admin = require("./controllers/adminController");
+const route = require("./controllers/routeController");
 
 const middlewares = require("./middleware");
-
-const controllers = require("./controllers");
 
 app.use(middlewares.CORS);
 app.use(Express.json());
 
 app.use("/user", user);
 
-// app.use("/route", middlewares.ValidateJWT, controllers.Route); 
+app.use("/routes", middlewares.ValidateJWT, route);
 
-app.use("/admin", middlewares.ValidateJWT, middlewares.Admin, controllers.Admin)
+app.use("/admin", middlewares.ValidateJWT, middlewares.Admin, admin);
 
 app.get("/", (req, res) => {
     res.json({

@@ -3,7 +3,7 @@ const db = require('../db');
 
 const Route = db.define('route', {
     route_id: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     routeName: {
@@ -32,4 +32,4 @@ const Route = db.define('route', {
     }
 });
 
-module.exports = Route;
+module.exports = Route

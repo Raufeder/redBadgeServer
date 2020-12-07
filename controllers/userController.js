@@ -6,10 +6,6 @@ const { UniqueConstraintError } = require('sequelize/lib/errors');
 
 const userController = Router();
 
-userController.post('/test', function(req, res){
-    res.send("Test went through!")
-});
-
 userController.post('/register', function(req, res) {
     let username = req.body.user.username;
     let email = req.body.user.email;
