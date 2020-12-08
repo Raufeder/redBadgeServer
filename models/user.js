@@ -16,7 +16,7 @@ const User = db.define('user', {
         allowNull: false,
     },
     userType: {
-        type: DataTypes.ENUM('user', 'admin'),
+        type: DataTypes.STRING,
         defaultValue: "user",
     }
 });

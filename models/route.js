@@ -2,10 +2,6 @@ const { DataTypes } = require('sequelize');
 const db = require('../db');
 
 const Route = db.define('route', {
-    route_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
     routeName: {
         type: DataTypes.STRING,
         allowNull: true

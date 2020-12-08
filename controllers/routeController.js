@@ -31,8 +31,7 @@ routeController.get('/:routeType', async (req, res) => {
 
 routeController.get('/:grade', async (req, res) => {
     try {
-        const routesByGrade = 
-        await Route.grade.findAll();
+        const routesByGrade = await Route.grade.findAll();
         res.status(200).json({
             routesByGrade: routesByGrade
         })

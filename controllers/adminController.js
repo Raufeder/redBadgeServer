@@ -1,40 +1,47 @@
 const bcrypt = require('bcryptjs');
 const { Router } = require('express');
-const { Route } = require("../models/route");
-const { User } = require("../models/user");
+const Route = require("../models/route");
+const User = require("../models/user");
 
 const adminController = Router();
 
-adminController.put('/add/:username', async (req,res) => {
+adminController.put('/add/:id', async (req,res) => {
     try {
-        let userId = req.params.id;
-
-        let userToAdmin = await User.findOne({
+        let userToAdmin = await User.findAll({
             where: {
-                id: userId
+                id: req.params.id,
             },
         });
+        userToAdmin.map((x,y) => {
+            if (x._previousDataValues.userType !== 'admin') {
+                User.update(req.body.user, {
+                    where: {
+                        id: req.params.id,
+                    },
+                }).then((user) => 
+                    res.status(200).json({
+                        user: user.userType == 'admin'
+                    })
+                )
+            } else {
+                res.status(409).json({
+                    message: 'User is already an Admin'
+                });
+            }
+            res.status(200).json({
+                message: "User successfully made an Admin"
+            })
 
-        if (userToAdmin.userType !== 'admin') {
-            userToAdmin.userType = 'admin';
-            userToAdmin.save();
-        } else {
-            res.status(409).json({
-                message: 'User is already an Admin'
-            });
-        }
+        });
 
-        res.status(200).json({
-            message: "User successfully made an Admin"
+    } catch (e) {
+        res.status(500).json({
+            message: "Failed to get users"
         })
-} catch (e) {
-    res.status(500).json({
-        message: "Failed to get users"
-    })
-}
+    }
 });
 
-adminController.delete('/delete/:id', async (req,res) => {
+adminController.delete('/delete', async (req,res) => {
         try {
             const deleteUser = await User.destroy({
                 where: {
@@ -100,7 +107,6 @@ adminController.get('/userlist', async (req, res) => {
 });
 
 adminController.post('/add/route', function(req, res) {
-    let route_id = req.user.id;
     let routeName = req.body.route.routeName;
     let routeType = req.body.route.routeType;
     let grade = req.body.route.grade;
@@ -109,7 +115,6 @@ adminController.post('/add/route', function(req, res) {
     let completed = req.body.route.completed;
 
     Route.create({
-        route_id: route_id,
         routeName: routeName,
         routeType: routeType,
         grade: grade,
@@ -119,6 +124,7 @@ adminController.post('/add/route', function(req, res) {
     }).then(
         function createSuccess(newRouteName) {
             res.json({
+                messasge: "Route successfully made",
                 routeName: routeName
             })
         },
@@ -167,42 +173,35 @@ adminController.get('/routelist', async (req, res) => {
     }
 });
 
-adminController.put('/edit/route/:id', function(req, res){
-    let route_id = req.user.id;
-    let routeName = req.body.route.routeName;
-    let routeType = req.body.route.routeType;
-    let grade = req.body.route.grade;
-    let keywords = req.body.route.keywords;
-    let description = req.body.route.description;
-    let completed = req.body.route.completed;
+adminController.put('/edit/route/:id', async (req, res) => {
+    try {
+        let routeName = req.body.route.routeName;
+        let routeType = req.body.route.routeType;
+        let grade = req.body.route.grade;
+        let keywords = req.body.route.keywords;
+        let description = req.body.route.description;
+        let completed = req.body.route.completed;
 
-    Route.update({
-        route_id: route_id,
-        routeName: routeName,
-        routeType: routeType,
-        grade: grade,
-        keywords: keywords,
-        description: description,
-        completed: completed
-    },
-    {where: {id: request.params.id}}
-    ).then(
-        function updateSuccess(updatedChar) {
-            response.json({
-                route_id: route_id,
-                routeName: routeName,
-                routeType: routeType,
-                grade: grade,
-                keywords: keywords,
-                description: description,
-                completed: completed
-            });
+        Route.update({
+            routeName: routeName,
+            routeType: routeType,
+            grade: grade,
+            keywords: keywords,
+            description: description,
+            completed: completed
         },
-        function createError(err) {             
-            response.send(500, err.message);
-            message: "Failed to update route"
-        }
-    )
+        {where: {id: req.params.id}}
+        ).then(
+            res.status(200).json({
+                message: "Route  Updated"
+            })
+
+        );
+    } catch (e) {
+        res.status(500).json({
+            message: "Couldn't update route"
+        })
+    } 
 });
 
 
