@@ -1,9 +1,7 @@
 const { Router } = require("express");
 const { Route } = require("../models");
-const { route } = require("./adminController");
 
 const routeController = Router();
-//TODO Route Endpoints (Check Planning Sheet)
 
 routeController.get('/', async (req, res) => {
     try {

@@ -2,11 +2,11 @@ const bcrypt = require('bcryptjs');
 const { Router } = require('express');
 const { Route } = require("../models/route");
 const { User } = require("../models/user");
+const validateSession = require("../middleware/validateJWT");
 
 const adminController = Router();
 
-//TODO Admin Routes (Update Password (Maybe))
-adminController.put('/add/:id', async (req,res) => {
+adminController.put('/add/:id', validateSession, async (req,res) => {
     try {
         let userId = req.params.id;
 
@@ -35,7 +35,7 @@ adminController.put('/add/:id', async (req,res) => {
 }
 });
 
-adminController.delete('/users/delete/:id', async (req,res) => {
+adminController.delete('/delete/:id', async (req,res) => {
     try {
         let userId = req.params.id
 
@@ -59,6 +59,39 @@ adminController.delete('/users/delete/:id', async (req,res) => {
         res.status(500).json({
             message: 'failed to delete user'
         })
+    }
+});
+
+adminController.put('/changepassword/:id', async (req, res) => {
+    try{
+        const userId = req.params.id;
+        const password = req.body;
+
+        let changePassword = await User.findOne({
+            where: {
+                id: userId
+            }
+        });
+
+        if (changePassword && password) {
+            changePassword.password = await bcrypt.hash(password, 12);
+            changePassword.save();
+            res.status(200).json({
+                message: "password changed successfully"
+            });
+        } else if (!password) {
+            res.status(422).json({
+                message: "missing new password"
+            });
+        } else {
+            res.status(404).json({
+                message: "Couldn't find user"
+            });
+        }
+    } catch (e) {
+        res.status(500).json ({
+            message: "request failed"
+        });
     }
 });
 
