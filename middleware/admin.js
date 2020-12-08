@@ -1,15 +1,15 @@
-const adminRequest = (req, res, next) => {
-    if (req.method === "OPTIONS") {
+const adminMiddleware = (req, res, next) => {
+    if (req.method === 'OPTIONS') {
         next();
     } else {
-        if (req.user.userType == "admin") {
+        if (req.user.userType == 'admin') {
             next();
-        } else {    
+        } else {
             res.status(401).json({
-                message : 'Admin Access Required'
+                message: 'Admin authorization needed'
             });
         }
     }
-};
+}
 
-module.exports = adminRequest
+module.exports = adminMiddleware;

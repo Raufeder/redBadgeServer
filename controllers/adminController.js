@@ -2,11 +2,10 @@ const bcrypt = require('bcryptjs');
 const { Router } = require('express');
 const { Route } = require("../models/route");
 const { User } = require("../models/user");
-const validateSession = require("../middleware/validateJWT");
 
 const adminController = Router();
 
-adminController.put('/add/:id', validateSession, async (req,res) => {
+adminController.put('/add/:username', async (req,res) => {
     try {
         let userId = req.params.id;
 
@@ -36,31 +35,23 @@ adminController.put('/add/:id', validateSession, async (req,res) => {
 });
 
 adminController.delete('/delete/:id', async (req,res) => {
-    try {
-        let userId = req.params.id
-
-        let deleteUser = await User.findOne({
-            where: {
-                id: userId
-            }
-        });
-
-        if (deleteUser) {
-            deleteUser.destroy();
-            res.status(200).json({
-                message: 'user deleted'
+        try {
+            const deleteUser = await User.destroy({
+                where: {
+                    id: req.user.id 
+                }
+            }).then((data => {
+                res.status(200).json({
+                    message: 'user deleted'
+                });
+            }));
+        } catch (e) {
+            res.status(500).json({
+                message: 'failed to delete user'
             });
-        } else {
-            res.status(401).json({
-                message: "Couldn't find user"
-            })
         }
-    } catch (e) {
-        res.status(500).json({
-            message: 'failed to delete user'
-        })
     }
-});
+);
 
 adminController.put('/changepassword/:id', async (req, res) => {
     try{

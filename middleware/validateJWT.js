@@ -6,8 +6,8 @@ const ValidateJWTMiddleware = (req, res, next) => {
     return next();
   } else if (req.headers.authorization) {
     const { authorization } = req.headers.authorization;
-    console.log(authorization);
     const payload = jwt.verify(authorization, process.env.JWT_SECRET);
+    console.log(payload)
     if (payload) {
       User.findOne({
         where: {
@@ -25,7 +25,7 @@ const ValidateJWTMiddleware = (req, res, next) => {
     }
   } else {
     res.status(401).json({
-      message: 'Not allowed'
+      message: 'whoops'
     });
   }
 }
