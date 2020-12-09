@@ -31,9 +31,7 @@ adminController.put('/add/:id', async (req,res) => {
             res.status(200).json({
                 message: "User successfully made an Admin"
             })
-
         });
-
     } catch (e) {
         res.status(500).json({
             message: "Failed to get users"
@@ -41,11 +39,11 @@ adminController.put('/add/:id', async (req,res) => {
     }
 });
 
-adminController.delete('/delete', async (req,res) => {
+adminController.delete('/delete/:id', async (req,res) => {
         try {
             const deleteUser = await User.destroy({
                 where: {
-                    id: req.user.id 
+                    id: req.params.id 
                 }
             }).then((data => {
                 res.status(200).json({
@@ -61,35 +59,36 @@ adminController.delete('/delete', async (req,res) => {
 );
 
 adminController.put('/changepassword/:id', async (req, res) => {
-    try{
-        const userId = req.params.id;
-        const password = req.body;
-
-        let changePassword = await User.findOne({
-            where: {
-                id: userId
+    try {
+        let changePassword = await User.findAll({
+             where: {
+                id: req.params.id,
+            },
+        });
+        changePassword.map((x,y) => {
+            if (x._previousDataValues.userType !== 'admin') {
+                 User.update(req.body.user, {
+                     where: {
+                        id: req.params.id,
+                    },
+                }).then((user) => 
+                    res.status(200).json({
+                        user: user.userType == 'admin'
+                    })
+                )
+            } else {
+                res.status(409).json({
+                    message: 'User is already an Admin'
+                });
             }
-        });
-
-        if (changePassword && password) {
-            changePassword.password = await bcrypt.hash(password, 12);
-            changePassword.save();
             res.status(200).json({
-                message: "password changed successfully"
-            });
-        } else if (!password) {
-            res.status(422).json({
-                message: "missing new password"
-            });
-        } else {
-            res.status(404).json({
-                message: "Couldn't find user"
-            });
-        }
-    } catch (e) {
-        res.status(500).json ({
-            message: "request failed"
+                message: "password successfully changed"
+            })
         });
+    } catch (e) {
+        res.status(500).json({
+            message: "Failed change password"
+        })
     }
 });
 

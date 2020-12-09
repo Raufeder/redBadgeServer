@@ -5,10 +5,6 @@ const ValidateJWTMiddleware = (req, res, next) => {
   if (req.method === 'OPTIONS') {
     return next();
   } else if (req.headers.authorization) {
-    const { authorization } = req.headers.authorization;
-    // res.status(400).json({
-    //   message: "at least we got here"
-    // })
     const token = req.headers.authorization;
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 

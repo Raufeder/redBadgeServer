@@ -18,7 +18,7 @@ routeController.get('/', async (req, res) => {
 
 routeController.get('/:routeType', async (req, res) => {
     try {
-        const routesByType = await Route.routeType.findAll();
+        const routesByType = await Route.findAll();
         res.status(200).json({
             routesByType: routesByType
         })
