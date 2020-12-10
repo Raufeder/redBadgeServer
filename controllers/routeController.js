@@ -16,9 +16,13 @@ routeController.get('/', async (req, res) => {
     }
 });
 
-routeController.get('/:routeType', async (req, res) => {
+routeController.get('/routetype/:routeType', async (req, res) => {
     try {
-        const routesByType = await Route.findAll();
+        const routesByType = await Route.findAll({
+            where: {
+                routeType: req.params.routeType
+            }
+        });
         res.status(200).json({
             routesByType: routesByType
         })
@@ -29,9 +33,13 @@ routeController.get('/:routeType', async (req, res) => {
     }
 });
 
-routeController.get('/:grade', async (req, res) => {
+routeController.get('/grade/:grade', async (req, res) => {
     try {
-        const routesByGrade = await Route.grade.findAll();
+        const routesByGrade = await Route.findAll({
+            where: {
+                grade: req.params.grade
+            }
+        });
         res.status(200).json({
             routesByGrade: routesByGrade
         })
