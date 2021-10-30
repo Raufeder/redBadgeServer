@@ -159,19 +159,6 @@ adminController.delete("/delete/route/:id", async (req, res) => {
   }
 });
 
-adminController.get("/routelist", async (req, res) => {
-  try {
-    const listofRoutes = await Route.findAll();
-    res.status(200).json({
-      routes: listofRoutes,
-    });
-  } catch (e) {
-    res.status(500).json({
-      message: "Couldn't get route list",
-    });
-  }
-});
-
 adminController.put("/edit/route/:id", async (req, res) => {
   try {
     let routeName = req.body.route.routeName;

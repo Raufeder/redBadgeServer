@@ -10,6 +10,8 @@ const route = require("./controllers/routeController");
 
 const middlewares = require("./middleware");
 
+//TODO Fix the make users admin endpoint
+
 app.use(middlewares.CORS);
 app.use(Express.json());
 
@@ -20,16 +22,18 @@ app.use("/routes", middlewares.ValidateJWT, route);
 app.use("/admin", middlewares.ValidateJWT, middlewares.Admin, admin);
 
 app.get("/", (req, res) => {
-    res.json({
-      message: "Welcome to the to be named rock climbing app!",
-    });
+  res.json({
+    message: "Welcome to Climber Tracker!",
   });
+});
 
-  db.authenticate()
+db.authenticate()
   .then(() => db.sync())
   .then(() =>
     app.listen(process.env.PORT, () => {
-      console.log(`[server]: App is listening on localhost:${process.env.PORT}`);
+      console.log(
+        `[server]: App is listening on localhost:${process.env.PORT}`
+      );
     })
   )
   .catch((e) => {
