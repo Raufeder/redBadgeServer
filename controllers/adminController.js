@@ -6,19 +6,22 @@ const User = require("../models/user");
 const adminController = Router();
 
 adminController.put("/add/:id", function (req, res) {
-  User.findOne({ where: { id: req.params.id } }).then(function (user) {
-    if (user) {
-      user.userType = "admin";
-      user.update(user, { fields: ["userType"] }).then(() => {
-        res.status(200).send(user);
-      });
-    } else {
-      res.status(502).send({ error: "Couldn't make user an Admin" });
-    }
-  });
-  // res.status(501).json({
-  //   message: "Error Occured",
-  // });
+  try {
+    User.findOne({ where: { id: req.params.id } }).then(function (user) {
+      if (user) {
+        user.userType = "admin";
+        user.update(user, { fields: ["userType"] }).then(() => {
+          res.status(200).send(user);
+        });
+      } else {
+        res.status(502).send({ error: "Couldn't make user an Admin" });
+      }
+    });
+  } catch (e) {
+    res.status(501).json({
+      message: "Failed to find user",
+    });
+  }
 });
 
 adminController.delete("/delete/:id", async (req, res) => {
