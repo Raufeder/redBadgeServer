@@ -10,8 +10,6 @@ const route = require("./controllers/routeController");
 
 const middlewares = require("./middleware");
 
-//TODO Fix the make users admin endpoint
-
 app.use(middlewares.CORS);
 app.use(Express.json());
 
