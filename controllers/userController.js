@@ -87,6 +87,34 @@ userController.get("/view/:username", function (req, res) {
   );
 });
 
+userController.put("/changepassword", function (req, res) {
+  User.findOne({ where: { username: req.body.user.username } }).then(
+    function (user) {
+      if (user) {
+        bcrypt.compare(
+          req.body.user.oldPassword,
+          user.password,
+          function (err, matches) {
+            if (matches) {
+              user.password = bcrypt.hashSync(req.body.user.newPassword, 12);
+              user.update(user, { fields: ["password"] }).then(() => {
+                res.status(200).send(user);
+              });
+            } else {
+              res.status(502).send({ error: "Old Password Didnt match." });
+            }
+          }
+        );
+      } else {
+        res.status(500).send({ error: "failed to authenticate" });
+      }
+    },
+    function (err) {
+      res.status(501).send({ error: "you failed, haha!!" });
+    }
+  );
+});
+
 userController.get("/routelist", async (req, res) => {
   try {
     const listofRoutes = await Route.findAll();

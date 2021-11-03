@@ -5,39 +5,20 @@ const User = require("../models/user");
 
 const adminController = Router();
 
-adminController.put("/add/:id", async (req, res) => {
-  try {
-    let userToAdmin = await User.findAll({
-      where: {
-        id: req.params.id,
-      },
-    });
-
-    const userResult = userToAdmin[0]._previousDataValues.userType;
-
-    if (userResult !== "admin") {
-      User.update(req.body.user, {
-        where: {
-          id: req.params.id,
-        },
-      }).then((user) =>
-        res.status(200).json({
-          user: user.userType == "admin",
-        })
-      );
-    } else {
-      res.status(409).json({
-        message: "User is already an Admin",
+adminController.put("/add/:id", function (req, res) {
+  User.findOne({ where: { id: req.params.id } }).then(function (user) {
+    if (user) {
+      user.userType = "admin";
+      user.update(user, { fields: ["userType"] }).then(() => {
+        res.status(200).send(user);
       });
+    } else {
+      res.status(502).send({ error: "Couldn't make user an Admin" });
     }
-    res.status(200).json({
-      message: "User successfully made an Admin",
-    });
-  } catch (e) {
-    res.status(500).json({
-      message: "Failed to get users",
-    });
-  }
+  });
+  // res.status(501).json({
+  //   message: "Error Occured",
+  // });
 });
 
 adminController.delete("/delete/:id", async (req, res) => {
